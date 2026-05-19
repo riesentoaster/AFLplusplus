@@ -56,8 +56,8 @@ RUN apt-get update && \
     $([ "$(dpkg --print-architecture)" = "amd64" ] && echo gcc-${GCC_VERSION}-multilib gcc-multilib) \
     $([ "$(dpkg --print-architecture)" = "arm64" ] && echo libcapstone-dev) && \
     rm -rf /var/lib/apt/lists/*
-    # gcc-multilib is only used for -m32 support on x86
-    # libcapstone-dev is used for coresight_mode on arm64
+# gcc-multilib is only used for -m32 support on x86
+# libcapstone-dev is used for coresight_mode on arm64
 
 RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-${GCC_VERSION} 0 && \
     update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-${GCC_VERSION} 0 && \
@@ -78,6 +78,9 @@ ENV AFL_I_DONT_CARE_ABOUT_MISSING_CRASHES=1
 
 RUN git clone --depth=1 https://github.com/vanhauser-thc/afl-cov && \
     (cd afl-cov && make install) && rm -rf afl-cov
+
+RUN git clone --depth=1 https://github.com/AFLplusplus/cov-analysis && \
+    (cd cov-analysis && make install) && rm -rf cov-analysis
 
 WORKDIR /AFLplusplus
 COPY . .
